@@ -4,7 +4,7 @@ const plusBtn = document.getElementById('plus')
 const minusBtn = document.getElementById('minus')
 const addFiveBtn = document.getElementById('addFive')
 const minusFiveBtn = document.getElementById('minusFive')
-const ifOddBtn = document.getElementById('ifOdd')
+const oddBtn = document.getElementById('odd')
 const asyncBtn = document.getElementById('async')
 const customBtn = document.getElementById('custom')
 
@@ -22,11 +22,24 @@ const counterReducer = (state = initialState, action) => {
             return { value: state.value - 1 }
         case 'counter/custom':
             return {value: state.value + action.payload}
-        default:
-        return state
-    }
+            default:
+              return state
+            }
+          }
+          
+// establishing dispatch functions
+const addOne = () => {
+  store.dispatch(addAction)
 }
-
+const subOne = () => {
+  store.dispatch(subAction)
+}
+const addFive = () => {
+  store.dispatch(addFiveAction)
+}
+const subFive = () => {
+  store.dispatch(subFiveAction)
+}
 // action object definitions
 const addAction = {
   type: 'counter/incremented'
@@ -44,7 +57,23 @@ const subFiveAction = {
   payload: -5
 }
 
-
+const oddAction = () => {
+  if(store.getState().value % 2 !== 0) {
+    store.dispatch({type: 'counter/incremented'})
+}
+}
+const asyncAction = () => {
+  setTimeout(() => {
+      store.dispatch({type: 'counter/incremented'})
+  }, 1000)
+}
+const customAction = () => {
+  let payload = Number(document.getElementById('userInput').value)
+  store.dispatch({
+      type: 'counter/custom',
+      payload: payload
+  })
+}
 
 
 // generating the store
@@ -56,28 +85,15 @@ const render = () => {
     valueEl.innerHTML = state.value.toString()
 }
 
-// establishing dispatch functions
-const addOne = () => {
-  store.dispatch(addAction)
-}
-
-const subOne = () => {
-  store.dispatch(subAction)
-}
-
-const addFive = () => {
-  store.dispatch(addFiveAction)
-}
-
-const subFive = () => {
-  store.dispatch(subFiveAction)
-}
 
 // event listeners
 plusBtn.addEventListener('click', addOne)
 minusBtn.addEventListener('click', subOne)
 addFiveBtn.addEventListener('click', addFive)
 minusFiveBtn.addEventListener('click', subFive)
+oddBtn.addEventListener('click', oddAction)
+asyncBtn.addEventListener('click', asyncAction)
+customBtn.addEventListener('click', customAction)
 
 // initial render
 render()
